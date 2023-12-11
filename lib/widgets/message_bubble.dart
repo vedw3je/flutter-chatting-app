@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:chat_app/screens/displaypfp.dart';
 import 'package:flutter/material.dart';
 
 // A MessageBubble for showing a single chat message on the ChatScreen.
@@ -43,6 +46,17 @@ class MessageBubble extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
+    void _displaypfp() {
+      Navigator.of(context).push(
+        MaterialPageRoute(
+            builder: (ctx) => displaypfp(
+                  userImage: userImage!,
+                  username: username!,
+                  isMe: isMe,
+                )),
+      );
+    }
+
     return Stack(
       children: [
         if (userImage != null)
@@ -50,12 +64,17 @@ class MessageBubble extends StatelessWidget {
             top: 15,
             // Align user image to the right, if the message is from me.
             right: isMe ? 0 : null,
-            child: CircleAvatar(
-              backgroundImage: NetworkImage(
-                userImage!,
+            child: GestureDetector(
+              child: CircleAvatar(
+                backgroundImage: NetworkImage(
+                  userImage!,
+                ),
+                backgroundColor: theme.colorScheme.primary.withAlpha(180),
+                radius: 23,
               ),
-              backgroundColor: theme.colorScheme.primary.withAlpha(180),
-              radius: 23,
+              onTap: () {
+                _displaypfp();
+              },
             ),
           ),
         Container(

@@ -1,10 +1,16 @@
 import 'dart:io';
 
+import 'package:chat_app/main.dart';
+import 'package:chat_app/screens/forgot_password_page.dart';
 import 'package:chat_app/widgets/user_image_picker.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
+
+final formatter = DateFormat.yMd();
 
 final _firebase = FirebaseAuth.instance;
 
@@ -19,13 +25,39 @@ class AuthScreen extends StatefulWidget {
 
 class _AuthScreenState extends State<AuthScreen> {
   final _form = GlobalKey<FormState>();
-
+  final passwordController = TextEditingController();
+  final confirmPasswordController = TextEditingController();
   var _isLogin = true;
   var _enteredEmail = '';
   var _enteredPassword = '';
   var _enteredUsername = '';
   File? _selectedImage;
   var _isAuthenticating = false;
+  DateTime? _selectedDate;
+  late final Function(DateTime _selectedDate) getdate;
+
+  @override
+  void dispose() {
+    passwordController.dispose();
+    confirmPasswordController.dispose();
+
+    super.dispose();
+  }
+
+  void _presentDatePicker() async {
+    final now = DateTime.now();
+    final firstDate = DateTime(now.year - 90, now.month, now.day);
+    final pickedDate = await showDatePicker(
+      context: context,
+      initialDate: now,
+      firstDate: firstDate,
+      lastDate: now,
+    );
+
+    setState(() {
+      _selectedDate = pickedDate!;
+    });
+  }
 
   void _submit() async {
     final isValid = _form.currentState!.validate();
@@ -46,7 +78,9 @@ class _AuthScreenState extends State<AuthScreen> {
             email: _enteredEmail, password: _enteredPassword);
       } else {
         final userCredentials = await _firebase.createUserWithEmailAndPassword(
-            email: _enteredEmail, password: _enteredPassword);
+          email: _enteredEmail,
+          password: _enteredPassword,
+        );
 
         final storageRef = FirebaseStorage.instance
             .ref()
@@ -63,6 +97,7 @@ class _AuthScreenState extends State<AuthScreen> {
           'username': _enteredUsername,
           'email': _enteredEmail,
           'image_url': imageUrl,
+          'birthdate': _selectedDate,
         });
       }
     } on FirebaseAuthException catch (error) {
@@ -84,9 +119,17 @@ class _AuthScreenState extends State<AuthScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.primary,
+      appBar: AppBar(
+        centerTitle: true,
+        title: const Text(
+          'Flutter-Chatting-App',
+        ),
+      ),
+      backgroundColor: Theme.of(context).colorScheme.primaryContainer,
       body: Center(
         child: SingleChildScrollView(
+          physics: const BouncingScrollPhysics(
+              decelerationRate: ScrollDecelerationRate.normal),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -98,10 +141,12 @@ class _AuthScreenState extends State<AuthScreen> {
                   right: 20,
                 ),
                 width: 200,
-                child: Image.asset('assets/images/chat.png'),
+                child: Image.asset(
+                  'assets/images/chat.png',
+                ),
               ),
               Card(
-                margin: const EdgeInsets.all(20),
+                margin: const EdgeInsets.all(25),
                 child: SingleChildScrollView(
                   child: Padding(
                     padding: const EdgeInsets.all(16),
@@ -116,9 +161,14 @@ class _AuthScreenState extends State<AuthScreen> {
                                 _selectedImage = pickedImage;
                               },
                             ),
+                          const SizedBox(
+                            height: 14,
+                          ),
                           TextFormField(
                             decoration: const InputDecoration(
-                                labelText: 'Email Address'),
+                              labelText: 'Email Address',
+                              border: OutlineInputBorder(),
+                            ),
                             keyboardType: TextInputType.emailAddress,
                             autocorrect: false,
                             textCapitalization: TextCapitalization.none,
@@ -135,10 +185,15 @@ class _AuthScreenState extends State<AuthScreen> {
                               _enteredEmail = value!;
                             },
                           ),
+                          const SizedBox(
+                            height: 14,
+                          ),
                           if (!_isLogin)
                             TextFormField(
-                              decoration:
-                                  const InputDecoration(labelText: 'Username'),
+                              decoration: const InputDecoration(
+                                labelText: 'Username',
+                                border: OutlineInputBorder(),
+                              ),
                               enableSuggestions: false,
                               validator: (value) {
                                 if (value == null ||
@@ -152,9 +207,15 @@ class _AuthScreenState extends State<AuthScreen> {
                                 _enteredUsername = value!;
                               },
                             ),
+                          const SizedBox(
+                            height: 14,
+                          ),
                           TextFormField(
-                            decoration:
-                                const InputDecoration(labelText: 'Password'),
+                            controller: passwordController,
+                            decoration: const InputDecoration(
+                              labelText: 'Password',
+                              border: OutlineInputBorder(),
+                            ),
                             obscureText: true,
                             validator: (value) {
                               if (value == null || value.trim().length < 6) {
@@ -166,7 +227,47 @@ class _AuthScreenState extends State<AuthScreen> {
                               _enteredPassword = value!;
                             },
                           ),
-                          const SizedBox(height: 12),
+                          const SizedBox(
+                            height: 14,
+                          ),
+                          if (!_isLogin)
+                            TextFormField(
+                                controller: confirmPasswordController,
+                                textInputAction: TextInputAction.done,
+                                decoration: const InputDecoration(
+                                  labelText: 'Confirm Password',
+                                  border: OutlineInputBorder(),
+                                ),
+                                obscureText: true,
+                                autovalidateMode:
+                                    AutovalidateMode.onUserInteraction,
+                                validator: (value) {
+                                  if (passwordController.text ==
+                                      confirmPasswordController.text) {
+                                    return null;
+                                  }
+                                  return 'Passwords do not match!';
+                                }),
+                          const SizedBox(
+                            height: 14,
+                          ),
+                          if (!_isLogin)
+                            Row(
+                              children: [
+                                Text(
+                                  _selectedDate == null
+                                      ? 'Enter your Birthdate'
+                                      : formatter.format(_selectedDate!),
+                                ),
+                                IconButton(
+                                  onPressed: _presentDatePicker,
+                                  icon: const Icon(
+                                    Icons.calendar_month,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          if (!_isLogin) const SizedBox(height: 12),
                           if (_isAuthenticating)
                             const CircularProgressIndicator(),
                           if (!_isAuthenticating)
@@ -175,7 +276,7 @@ class _AuthScreenState extends State<AuthScreen> {
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: Theme.of(context)
                                     .colorScheme
-                                    .primaryContainer,
+                                    .onPrimaryContainer,
                               ),
                               child: Text(_isLogin ? 'Login' : 'Signup'),
                             ),
@@ -190,6 +291,17 @@ class _AuthScreenState extends State<AuthScreen> {
                                   ? 'Create an account'
                                   : 'I already have an account'),
                             ),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          TextButton(
+                              onPressed: () {
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                      builder: (ctx) => ForgotPasswordPage()),
+                                );
+                              },
+                              child: Text('Forgot Password?'))
                         ],
                       ),
                     ),
