@@ -19,54 +19,98 @@ class _settingsState extends State<settings> {
         elevation: 15,
       ),
       backgroundColor: Theme.of(context).colorScheme.primaryContainer,
-      body: const SingleChildScrollView(
+      body: SingleChildScrollView(
+        scrollDirection: Axis.vertical,
+        physics: const BouncingScrollPhysics(
+            decelerationRate: ScrollDecelerationRate.normal),
         child: Row(
           children: [
             Padding(padding: EdgeInsets.only(left: 15)),
             Column(
               children: [
                 Padding(padding: EdgeInsets.all(15)),
-                Icon(
-                  Icons.key,
-                  size: 40,
+                IconButton(
+                  icon: Icon(Icons.key),
+                  onPressed: () {},
+                  iconSize: 40,
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 40,
                 ),
-                Icon(Icons.lock, size: 40),
-                SizedBox(
+                IconButton(
+                  onPressed: () {},
+                  icon: Icon(Icons.lock),
+                  iconSize: 40,
+                ),
+                const SizedBox(
                   height: 40,
                 ),
-                Icon(Icons.face_retouching_natural_outlined, size: 40),
-                SizedBox(
+                IconButton(
+                  onPressed: () {},
+                  icon: const Icon(
+                    Icons.face_retouching_natural_outlined,
+                  ),
+                  iconSize: 40,
+                ),
+                const SizedBox(
                   height: 40,
                 ),
-                Icon(Icons.chat, size: 40),
-                SizedBox(
+                IconButton(
+                  onPressed: () {},
+                  icon: const Icon(
+                    Icons.chat,
+                  ),
+                  iconSize: 40,
+                ),
+                const SizedBox(
                   height: 40,
                 ),
-                Icon(Icons.notification_important, size: 40),
-                SizedBox(
+                IconButton(
+                  onPressed: () {},
+                  icon: const Icon(
+                    Icons.notification_important,
+                  ),
+                  iconSize: 40,
+                ),
+                const SizedBox(
                   height: 40,
                 ),
-                Icon(Icons.language, size: 40),
-                SizedBox(
+                IconButton(
+                  onPressed: () {},
+                  icon: const Icon(
+                    Icons.language,
+                  ),
+                  iconSize: 40,
+                ),
+                const SizedBox(
                   height: 40,
                 ),
-                Icon(Icons.help, size: 40),
-                SizedBox(
+                IconButton(
+                  onPressed: () {},
+                  icon: const Icon(
+                    Icons.help,
+                  ),
+                  iconSize: 40,
+                ),
+                const SizedBox(
                   height: 40,
                 ),
-                Icon(Icons.people, size: 40),
-                SizedBox(
+                IconButton(
+                  onPressed: () {},
+                  icon: const Icon(
+                    Icons.people,
+                  ),
+                  iconSize: 40,
+                ),
+                const SizedBox(
                   height: 40,
                 ),
               ],
             ),
-            SizedBox(
+            const SizedBox(
               width: 20,
             ),
-            Column(
+            const Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -82,7 +126,7 @@ class _settingsState extends State<settings> {
                   style: TextStyle(fontWeight: FontWeight.w200),
                 ),
                 SizedBox(
-                  height: 40,
+                  height: 60,
                 ),
                 Text(
                   'Privacy',
@@ -93,7 +137,7 @@ class _settingsState extends State<settings> {
                   style: TextStyle(fontWeight: FontWeight.w200),
                 ),
                 SizedBox(
-                  height: 40,
+                  height: 60,
                 ),
                 Text(
                   'Avatar',
@@ -104,7 +148,7 @@ class _settingsState extends State<settings> {
                   style: TextStyle(fontWeight: FontWeight.w200),
                 ),
                 SizedBox(
-                  height: 40,
+                  height: 60,
                 ),
                 Text(
                   'Chats',
@@ -115,7 +159,7 @@ class _settingsState extends State<settings> {
                   style: TextStyle(fontWeight: FontWeight.w200),
                 ),
                 SizedBox(
-                  height: 40,
+                  height: 60,
                 ),
                 Text(
                   'Notifications',
@@ -126,7 +170,7 @@ class _settingsState extends State<settings> {
                   style: TextStyle(fontWeight: FontWeight.w200),
                 ),
                 SizedBox(
-                  height: 40,
+                  height: 60,
                 ),
                 Text(
                   'App Language',
@@ -137,7 +181,7 @@ class _settingsState extends State<settings> {
                   style: TextStyle(fontWeight: FontWeight.w200),
                 ),
                 SizedBox(
-                  height: 40,
+                  height: 60,
                 ),
                 Text(
                   'Help',
@@ -148,7 +192,7 @@ class _settingsState extends State<settings> {
                   style: TextStyle(fontWeight: FontWeight.w200),
                 ),
                 SizedBox(
-                  height: 40,
+                  height: 55,
                 ),
                 Text(
                   'Invite a Friend',

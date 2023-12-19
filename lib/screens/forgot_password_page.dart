@@ -1,5 +1,7 @@
+import 'package:chat_app/screens/verify_email_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:email_validator/email_validator.dart';
 
 class ForgotPasswordPage extends StatefulWidget {
   const ForgotPasswordPage({super.key});
@@ -25,6 +27,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
         appBar: AppBar(
           title: const Text('Reset Password'),
         ),
+        backgroundColor: Theme.of(context).colorScheme.primaryContainer,
         body: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.all(16),
@@ -54,11 +57,15 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                     ),
                     autovalidateMode: AutovalidateMode.onUserInteraction,
                     validator: (email) =>
-                        email != null ? 'Enter a valid email' : null,
+                        email != null && !EmailValidator.validate(email)
+                            ? 'Enter a valid email'
+                            : null,
                   ),
                   const SizedBox(height: 20),
                   ElevatedButton.icon(
                     style: ElevatedButton.styleFrom(
+                      backgroundColor:
+                          Theme.of(context).colorScheme.onPrimaryContainer,
                       minimumSize: const Size.fromHeight(50),
                     ),
                     icon: const Icon(Icons.email_outlined),
@@ -66,7 +73,9 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                       'Reset Password',
                       style: TextStyle(fontSize: 24),
                     ),
-                    onPressed: verifyEmail,
+                    onPressed: () {
+                      verifyEmail();
+                    },
                   ),
                 ],
               ),
@@ -84,7 +93,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
 
     try {
       await FirebaseAuth.instance
-          .sendPasswordResetEmail(email: emailController.text.trim());
+          .sendPasswordResetEmail(email: emailController.text);
 
       const snackBar =
           SnackBar(content: Text('Reset Password Email has been Sent.'));
@@ -93,7 +102,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
 
       Navigator.of(context).popUntil((route) => route.isFirst);
     } on FirebaseAuthException catch (e) {
-      final snackBar = SnackBar(content: Text(e.message!));
+      final snackBar = SnackBar(content: Text('Invalid email'));
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
     }
   }

@@ -294,14 +294,16 @@ class _AuthScreenState extends State<AuthScreen> {
                           const SizedBox(
                             height: 10,
                           ),
-                          TextButton(
-                              onPressed: () {
-                                Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                      builder: (ctx) => ForgotPasswordPage()),
-                                );
-                              },
-                              child: Text('Forgot Password?'))
+                          if (_isLogin)
+                            TextButton(
+                                onPressed: () {
+                                  Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                        builder: (ctx) =>
+                                            const ForgotPasswordPage()),
+                                  );
+                                },
+                                child: const Text('Forgot Password?'))
                         ],
                       ),
                     ),

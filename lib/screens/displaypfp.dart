@@ -40,7 +40,6 @@ class displaypfp extends StatefulWidget {
 }
 
 class _displaypfpState extends State<displaypfp> {
-  final _addressController = TextEditingController();
   File? image;
   String address = '';
   var imagePicker;
@@ -51,13 +50,14 @@ class _displaypfpState extends State<displaypfp> {
   DateTime? _selectedDate;
 
   getemail() {
-    final email = User!.email;
+    final email = FirebaseAuth.instance.currentUser!.email;
     return email;
   }
 
   @override
   void initState() {
     super.initState();
+    _presentDatePicker();
     imagePicker = new ImagePicker();
   }
 
@@ -109,7 +109,7 @@ class _displaypfpState extends State<displaypfp> {
                   var source = type == ImageSource.camera
                       ? ImageSource.camera
                       : ImageSource.gallery;
-                  File image = await imagePicker.pickImage(
+                  final image = await imagePicker.pickImage(
                     source: source,
                     imageQuality: 50,
                     preferredCameraDevice: CameraDevice.front,
@@ -164,140 +164,144 @@ class _displaypfpState extends State<displaypfp> {
             const SizedBox(
               height: 15,
             ),
-            Card(
-              elevation: 10,
-              margin: const EdgeInsets.all(10),
-              surfaceTintColor: Color.fromARGB(255, 0, 102, 180),
-              child: Row(
-                children: [
-                  const Icon(Icons.email, size: 75),
-                  Padding(padding: EdgeInsets.all(7)),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text(
-                        'EMAIL ADDRESS',
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 20),
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      Text(
-                        getemail(),
-                        textAlign: TextAlign.start,
-                      ),
-                    ],
-                  )
-                ],
+            if (widget.isMe)
+              Card(
+                elevation: 10,
+                margin: const EdgeInsets.all(10),
+                surfaceTintColor: Color.fromARGB(255, 0, 102, 180),
+                child: Row(
+                  children: [
+                    const Icon(Icons.email, size: 75),
+                    Padding(padding: EdgeInsets.all(7)),
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          'EMAIL ADDRESS',
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 20),
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        Text(
+                          getemail(),
+                          textAlign: TextAlign.start,
+                        ),
+                      ],
+                    )
+                  ],
+                ),
               ),
-            ),
             const SizedBox(
               height: 15,
             ),
-            const Card(
-              elevation: 10,
-              margin: EdgeInsets.all(10),
-              surfaceTintColor: Color.fromARGB(255, 0, 102, 180),
-              child: Row(
-                children: [
-                  Icon(Icons.phone_android_rounded, size: 75),
-                  Padding(padding: EdgeInsets.all(7)),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'MOBILE',
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 20),
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Text(
-                        '9082534992',
-                        textAlign: TextAlign.start,
-                      ),
-                    ],
-                  )
-                ],
+            if (widget.isMe)
+              const Card(
+                elevation: 10,
+                margin: EdgeInsets.all(10),
+                surfaceTintColor: Color.fromARGB(255, 0, 102, 180),
+                child: Row(
+                  children: [
+                    Icon(Icons.phone_android_rounded, size: 75),
+                    Padding(padding: EdgeInsets.all(7)),
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'MOBILE',
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 20),
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Text(
+                          '9082534992',
+                          textAlign: TextAlign.start,
+                        ),
+                      ],
+                    )
+                  ],
+                ),
               ),
-            ),
             const SizedBox(
               height: 15,
             ),
-            Card(
-              elevation: 10,
-              margin: EdgeInsets.all(10),
-              surfaceTintColor: Color.fromARGB(255, 0, 102, 180),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  IconButton(
-                    onPressed: () {},
-                    icon: Icon(Icons.home),
-                    iconSize: 75,
-                  ),
-                  Padding(padding: EdgeInsets.all(7)),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Address',
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 20),
-                        textAlign: TextAlign.left,
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                    ],
-                  )
-                ],
+            if (widget.isMe)
+              Card(
+                elevation: 10,
+                margin: EdgeInsets.all(10),
+                surfaceTintColor: Color.fromARGB(255, 0, 102, 180),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    IconButton(
+                      onPressed: () {},
+                      icon: Icon(Icons.home),
+                      iconSize: 75,
+                    ),
+                    Padding(padding: EdgeInsets.all(7)),
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Address',
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 20),
+                          textAlign: TextAlign.left,
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                      ],
+                    )
+                  ],
+                ),
               ),
-            ),
             const SizedBox(
               height: 15,
             ),
-            Card(
-              elevation: 10,
-              margin: EdgeInsets.all(10),
-              surfaceTintColor: Color.fromARGB(255, 0, 102, 180),
-              child: Row(
-                children: [
-                  IconButton(
-                    icon: Icon(Icons.calendar_month_rounded),
-                    onPressed: () {
-                      _presentDatePicker();
-                    },
-                    iconSize: 75,
-                  ),
-                  Padding(padding: EdgeInsets.all(7)),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text(
-                        'DATE OF BIRTH',
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 20),
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      Text(
-                        _selectedDate == null
-                            ? 'Enter your Birthdate'
-                            : formatter.format(_selectedDate!),
-                      ),
-                    ],
-                  )
-                ],
+            if (widget.isMe)
+              Card(
+                elevation: 10,
+                margin: EdgeInsets.all(10),
+                surfaceTintColor: Color.fromARGB(255, 0, 102, 180),
+                child: Row(
+                  children: [
+                    IconButton(
+                      icon: Icon(Icons.calendar_month_rounded),
+                      onPressed: () {
+                        _presentDatePicker();
+                      },
+                      iconSize: 75,
+                    ),
+                    Padding(padding: EdgeInsets.all(7)),
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          'DATE OF BIRTH',
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 20),
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        Text(
+                          _selectedDate == null
+                              ? 'Enter your Birthdate'
+                              : formatter.format(_selectedDate!),
+                        ),
+                      ],
+                    )
+                  ],
+                ),
               ),
-            ),
             const SizedBox(
               height: 16,
             ),
