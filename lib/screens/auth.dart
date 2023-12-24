@@ -26,6 +26,8 @@ class AuthScreen extends StatefulWidget {
 class _AuthScreenState extends State<AuthScreen>
     with SingleTickerProviderStateMixin {
   late AnimationController controller;
+  late Animation animation;
+  late Animation animation1;
   final _form = GlobalKey<FormState>();
   final passwordController = TextEditingController();
   final confirmPasswordController = TextEditingController();
@@ -43,8 +45,13 @@ class _AuthScreenState extends State<AuthScreen>
     super.initState();
     controller = AnimationController(
       vsync: this,
-      duration: Duration(seconds: 2),
+      duration: Duration(seconds: 3),
     );
+
+    animation = CurvedAnimation(parent: controller, curve: Curves.easeIn);
+    animation1 =
+        ColorTween(begin: Colors.white, end: Color.fromARGB(255, 18, 0, 58))
+            .animate(controller);
 
     controller.forward();
 
@@ -143,10 +150,7 @@ class _AuthScreenState extends State<AuthScreen>
           'Flutter-Chatting-App',
         ),
       ),
-      backgroundColor: Theme.of(context)
-          .colorScheme
-          .primaryContainer
-          .withOpacity(controller.value),
+      backgroundColor: animation1.value,
       body: Center(
         child: SingleChildScrollView(
           physics: const BouncingScrollPhysics(
@@ -161,7 +165,7 @@ class _AuthScreenState extends State<AuthScreen>
                   left: 20,
                   right: 20,
                 ),
-                width: controller.value * 200,
+                width: animation.value * 200,
                 child: Image.asset(
                   'assets/images/chat.png',
                 ),
