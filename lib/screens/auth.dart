@@ -23,7 +23,9 @@ class AuthScreen extends StatefulWidget {
   }
 }
 
-class _AuthScreenState extends State<AuthScreen> {
+class _AuthScreenState extends State<AuthScreen>
+    with SingleTickerProviderStateMixin {
+  late AnimationController controller;
   final _form = GlobalKey<FormState>();
   final passwordController = TextEditingController();
   final confirmPasswordController = TextEditingController();
@@ -37,10 +39,26 @@ class _AuthScreenState extends State<AuthScreen> {
   late final Function(DateTime _selectedDate) getdate;
 
   @override
+  void initState() {
+    super.initState();
+    controller = AnimationController(
+      vsync: this,
+      duration: Duration(seconds: 2),
+    );
+
+    controller.forward();
+
+    controller.addListener(() {
+      setState(() {});
+      print(controller.value);
+    });
+  }
+
+  @override
   void dispose() {
     passwordController.dispose();
     confirmPasswordController.dispose();
-
+    controller.dispose();
     super.dispose();
   }
 
@@ -125,7 +143,10 @@ class _AuthScreenState extends State<AuthScreen> {
           'Flutter-Chatting-App',
         ),
       ),
-      backgroundColor: Theme.of(context).colorScheme.primaryContainer,
+      backgroundColor: Theme.of(context)
+          .colorScheme
+          .primaryContainer
+          .withOpacity(controller.value),
       body: Center(
         child: SingleChildScrollView(
           physics: const BouncingScrollPhysics(
@@ -140,7 +161,7 @@ class _AuthScreenState extends State<AuthScreen> {
                   left: 20,
                   right: 20,
                 ),
-                width: 200,
+                width: controller.value * 200,
                 child: Image.asset(
                   'assets/images/chat.png',
                 ),

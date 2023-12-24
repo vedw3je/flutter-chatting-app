@@ -57,11 +57,11 @@ class _displaypfpState extends State<displaypfp> {
   @override
   void initState() {
     super.initState();
-    _presentDatePicker();
-    imagePicker = new ImagePicker();
+
+    //imagePicker = new ImagePicker();
   }
 
-  void _presentDatePicker() async {
+  _presentDatePicker() async {
     final now = DateTime.now();
     final firstDate = DateTime(now.year - 90, now.month, now.day);
 
@@ -75,6 +75,8 @@ class _displaypfpState extends State<displaypfp> {
     setState(() {
       _selectedDate = pickedDate!;
     });
+
+    return _selectedDate;
   }
 
   @override
@@ -236,46 +238,13 @@ class _displaypfpState extends State<displaypfp> {
                 margin: EdgeInsets.all(10),
                 surfaceTintColor: Color.fromARGB(255, 0, 102, 180),
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    IconButton(
-                      onPressed: () {},
-                      icon: Icon(Icons.home),
-                      iconSize: 75,
-                    ),
-                    Padding(padding: EdgeInsets.all(7)),
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Address',
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 20),
-                          textAlign: TextAlign.left,
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                      ],
-                    )
-                  ],
-                ),
-              ),
-            const SizedBox(
-              height: 15,
-            ),
-            if (widget.isMe)
-              Card(
-                elevation: 10,
-                margin: EdgeInsets.all(10),
-                surfaceTintColor: Color.fromARGB(255, 0, 102, 180),
-                child: Row(
                   children: [
                     IconButton(
                       icon: Icon(Icons.calendar_month_rounded),
                       onPressed: () {
-                        _presentDatePicker();
+                        setState(() {
+                          _presentDatePicker();
+                        });
                       },
                       iconSize: 75,
                     ),
